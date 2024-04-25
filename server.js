@@ -11,8 +11,13 @@ import messageRoute from "./route/message.route.js"
 import chatRoute from "./route/chat.route.js"
 
 
+
+
 const app = express();
 dotenv.config();
+
+app.use(cors());
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
