@@ -45,7 +45,7 @@ const updateUser = asyncHandler(
         const {_id} = req.user
         const {username , status , bio} = req.body
         let user = await User.findById(_id)
-        const profileImage = req.fileUrls[0] || user.profileImage
+        const profileImage = req.fileUrls? req.fileUrls[0] : user.profileImage
         if(!user) throw new myError("User not found" , 404)
 
         user.username = username || user.username;
