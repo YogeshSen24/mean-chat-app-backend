@@ -17,7 +17,9 @@ import chatRoute from "./route/chat.route.js"
 const app = express();
 dotenv.config();
 
-app.use(cors());
+app.use(cors(
+  {credentials: true}
+));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -42,4 +44,4 @@ app.listen(port, () => {
 //connecting database
 connectDB()
 
-//mongodb+srv://yose0026:Yose24@cluster0.nydoxki.mongodb.net/
+
