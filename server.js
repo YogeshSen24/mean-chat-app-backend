@@ -18,7 +18,10 @@ const app = express();
 dotenv.config();
 
 app.use(cors(
-  {credentials: true}
+  {
+    origin : "*",
+    credentials: true
+  }
 ));
 
 // parse application/x-www-form-urlencoded
