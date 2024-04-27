@@ -17,12 +17,17 @@ import chatRoute from "./route/chat.route.js"
 const app = express();
 dotenv.config();
 
-app.use(cors(
-  {
-    origin : "*",
-    credentials: true
-  }
-));
+app.use(cors({
+  origin: (origin, callback) => {
+    // Check if the origin is allowed
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
