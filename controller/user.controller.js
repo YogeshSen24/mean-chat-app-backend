@@ -65,8 +65,9 @@ const updateUser = asyncHandler(
 
 const getAllFriendRequests = asyncHandler( async(req ,res)=>{
     const {_id} = req.user
-    const me = await User.findById(_id).populate({
+    const me = await User.findById(_id).select("friendRequests").populate({
         path: "friendRequests",
+        select: "_id type",
         populate: {
           path: "requester",
           select: "_id username email profileImage",
@@ -78,8 +79,8 @@ const getAllFriendRequests = asyncHandler( async(req ,res)=>{
       });
       
     if(!me) throw new myError("User not found" , 404)
-    console.log(me.friendRequests);
-    Response(res , me.friendRequests , 200 , "Friend requests fetched successfully")
+
+    Response(res , me , 200 , "Friend requests fetched successfully")
 })
 
 export {getUser , getSelf , resetPassword , updateUser , getAllFriendRequests }
