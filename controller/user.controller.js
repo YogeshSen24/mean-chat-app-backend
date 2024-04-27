@@ -79,6 +79,7 @@ const getAllFriendRequests = asyncHandler( async(req ,res)=>{
       });
       
     if(!me) throw new myError("User not found" , 404)
+    if(me.friendRequests.length === 0) throw new myError("No friend requests found" , 404)
 
     Response(res , me , 200 , "Friend requests fetched successfully")
 })
