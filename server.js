@@ -18,14 +18,7 @@ const app = express();
 dotenv.config();
 
 app.use(cors({
-  origin: (origin, callback) => {
-    // Check if the origin is allowed
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: "*",
   credentials: true
 }));
 
