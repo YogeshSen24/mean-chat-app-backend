@@ -63,4 +63,22 @@ const updateUser = asyncHandler(
     }
 )
 
-export {getUser , getSelf , resetPassword , updateUser }
+const getAllFriendRequests = asyncHandler( async(req ,res)=>{
+    const {_id} = req.user
+    const me = await User.findById(_id).populate({
+        path: "friendRequests",
+        populate: {
+          path: "requester",
+          select: "_id username email profileImage",
+          populate: {
+            path: "friends",
+            select: "_id profileImage"
+          }
+        }
+      });
+      
+    if(!me) throw new myError("User not found" , 404)
+    Response(res , me.friendRequests , 200 , "Friend requests fetched successfully")
+})
+
+export {getUser , getSelf , resetPassword , updateUser , getAllFriendRequests }

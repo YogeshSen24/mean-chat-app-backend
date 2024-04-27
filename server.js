@@ -10,6 +10,7 @@ import authRoute from "./route/auth.route.js"
 import userRoute from "./route/user.route.js"
 import messageRoute from "./route/message.route.js"
 import chatRoute from "./route/chat.route.js"
+import requestRoute from "./route/request.route.js"
 
 
 
@@ -44,6 +45,7 @@ app.use("/api/v1/auth" ,  authRoute)
 app.use("/api/v1/user" ,  userRoute)
 app.use("/api/v1/message" , messageRoute)
 app.use("/api/v1/chat" , chatRoute)
+app.use("/api/v1/request" , requestRoute)
 
 //starting server
 const port = process.env.PORT || 8000;
