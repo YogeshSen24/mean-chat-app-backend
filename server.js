@@ -17,7 +17,7 @@ import chatRoute from "./route/chat.route.js"
 const app = express();
 dotenv.config();
 
-const whitelist = ['https://owl-chat.netlify.app/login', 'http://localhost:5173/login'];
+const whitelist = ['https://owl-chat.netlify.app', 'http://localhost:5173'];
 
 app.use(cors({
   origin: function(origin, callback) {
