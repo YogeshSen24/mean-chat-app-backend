@@ -2,27 +2,25 @@ import asyncHandler from "../utils/asyncHandler.js";
 import myError from "../utils/customErrors.js";
 import Chat from "../models/chat.model.js";
 import Response from "../utils/customResponses.js";
-import User from "../models/user.model.js"
-
-
+import User from "../models/user.model.js";
 
 const createChat = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   if (!userId) {
     throw new myError("Please provide user to connect!!!", 501);
   }
-  
+
   const user1 = await User.findById(req.user._id);
   const user2 = await User.findById(userId);
-  if(!user2){
+  if (!user2) {
     throw new myError("User to connect not found!!!", 501);
   }
 
-  if(user1.friends.includes(user2._id)){
+  if (user1.friends.includes(user2._id)) {
     throw new myError("User is already connected!!!", 501);
   }
 
-  const particepants = [user1._id , user2._id];
+  const particepants = [user1._id, user2._id];
 
   const chat = await Chat.create({
     particepants,
@@ -34,14 +32,14 @@ const createChat = asyncHandler(async (req, res) => {
   }
   chat.save();
 
-    user1.friends.push(user2._id);
-    user1.save();
-    user2.friends.push(user1._id);
-    user2.save();
+  user1.friends.push(user2._id);
+  user1.save();
+  user2.friends.push(user1._id);
+  user2.save();
   Response(res, chat, 201, "Chat Created Successfully!!!");
 });
 const findChat = asyncHandler(async (req, res) => {
-  const currentUser = req.user._id
+  const currentUser = req.user._id;
   const { userId } = req.params;
   if (!userId) {
     throw new myError("Please provide user to connect!!!", 501);
@@ -49,11 +47,14 @@ const findChat = asyncHandler(async (req, res) => {
 
   const chat = await Chat.findOne({
     particepants: { $all: [currentUser, userId] },
-    type: 'individual'
-  })
+    type: "individual",
+  });
 
   if (!chat) {
-    throw new myError("No connection found , please add the user in your friendlist to send message!!!", 501);
+    throw new myError(
+      "No connection found , please add the user in your friendlist to send message!!!",
+      501
+    );
   }
   Response(res, chat, 201, "Success!!!");
 });
@@ -183,6 +184,46 @@ const removeMembers = asyncHandler(async (req, res) => {
   });
   Response(res, group, 201, "Members removed Successfully!!!");
 });
+const deleteChat = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { chatId } = req.params;
+  const chat = await Chat.findById(chatId);
+  if (!chat) {
+    throw new myError("Chat not found!!!", 404);
+  }
+  // Check if the current user is authorized to delete the chat
+  if (!chat.particepants.includes(_id))
+    throw new myError("You are not authorized to delete this chat", 401);
+  chat.particepants.map(async (participant) => {
+    const user = await User.findById(participant);
+    const indexofCurrentChat = user.chats.indexOf(chat._id);
+    user.chats.splice(indexofCurrentChat, 1);
+    user.save();
+  });
+
+  const removechat = await Chat.findOneAndDelete({ _id: chatId });
+  Response(res, removechat, 200, "Chat deleted successfully!!!");
+});
+
+const deleteGroup = asyncHandler(async (req, res) => {
+  const { groupId } = req.params;
+  const { _id } = req.user;
+  const group = await Chat.findById(groupId);
+  if (!group) {
+    throw new myError("Group not found!!!", 404);
+  }
+  // Check if the current user is authorized to delete the group
+  if (group.owner.toString() !== _id.toString())
+    throw new myError("You are not authorized to delete this group", 401);
+
+  await User.updateMany(
+    { _id: { $in: group.particepants } }, // Find users who are participants in the group
+    { $pull: { createdGroups: group._id, inGroups: group._id } } // Remove references to the group
+  );
+
+  await group.remove(); // Remove the group from the database
+  Response(res, null, 200, "Group deleted successfully!!!");
+});
 
 export {
   createChat,
@@ -192,4 +233,6 @@ export {
   transferGroupOwnership,
   addMembers,
   removeMembers,
+  deleteChat,
+  deleteGroup,
 };

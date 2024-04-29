@@ -48,6 +48,18 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+// Pre-save hook to encrypt the password before saving
+userSchema.pre("save" , async function(next) {
+    if (!this.isModified('password')) {
+        return next();
+    }
+    // Encrypt the password
+    const hashedPassword = await bcrypt.hash(this.password , 10);
+    // Replace plain password with hashed password
+    this.password = hashedPassword;
+    next();
+});
+
 userSchema.pre("save" , async function(next){
     if (!this.isModified('password')) {
         return next();
