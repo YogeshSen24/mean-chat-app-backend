@@ -85,9 +85,18 @@ const getAllFriendRequests = asyncHandler(async (req, res) => {
 
 const getAllFriends = asyncHandler(async (req, res) => {
   const { _id } = req.user;
-  const user = await User.findById(_id).select("+friends").populate("friends");
-  if (!user) throw new myError("No friends found", 404);
-  Response(res, user.friends, 200, "Friends fetched successfully");
+  const user = await User.findById(_id).select("friends")
+  .populate({
+      path: 'friends',
+      select : 'particepants',
+      populate: {
+          path: 'particepants',
+              select : 'username _id email profileImage'
+       
+
+      }
+  });  if (!user) throw new myError("No friends found", 404);
+  Response(res, user, 200, "Friends fetched successfully");
 });
 const searchUser = asyncHandler(async (req, res) => {
   const { data } = req.params;

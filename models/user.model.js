@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     },
     friends: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Chat'
     }],
     friendRequests : [{
         type: mongoose.Schema.Types.ObjectId,
@@ -32,11 +32,11 @@ const userSchema = new mongoose.Schema({
     }],
     createdGroups: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Group'
+        ref: 'Chat'
     }],
     inGroups: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Group'
+        ref: 'Chat'
     }],
     status: {
         type: String,
