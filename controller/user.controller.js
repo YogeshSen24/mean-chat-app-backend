@@ -115,7 +115,14 @@ const searchUser = asyncHandler(async (req, res) => {
       ]
   })
     .select("_id username email profileImage bio")
-    .populate({ path: "friends" , select : "username _id email profileImage"}); // Select fields you want to send in the response
+    .populate({
+      path: 'friends',
+      select : 'particepants',
+      populate: {
+          path: 'particepants',
+              select : '_id profileImage'
+      }
+  }); // Select fields you want to send in the response
 
   // Send the response
   Response(res, matchedUsers, 200, "Users found successfully");
