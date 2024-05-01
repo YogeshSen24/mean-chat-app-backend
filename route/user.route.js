@@ -12,7 +12,7 @@ router.get("/", authenticateUser , getSelf)
 router.get("/search/:data", authenticateUser , searchUser)
 router.get("/friends/get", authenticateUser , getAllFriends)
 router.get("/requests/get", authenticateUser , getAllFriendRequests)
-router.get("/friend/remove/:friendId" , authenticateUser , removeFriend)
+router.delete("/friend/remove/:friendId" , authenticateUser , removeFriend)
 router.put("/resetPassword", authenticateUser , resetPassword)
 router.put("/update", authenticateUser ,multerUpload.single("avatar") , uploadToCloudinary, updateUser)
 
