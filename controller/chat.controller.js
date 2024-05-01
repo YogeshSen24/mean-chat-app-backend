@@ -192,8 +192,10 @@ const deleteChat = asyncHandler(async (req, res) => {
     throw new myError("Chat not found!!!", 404);
   }
   // Check if the current user is authorized to delete the chat
-  if (!chat.particepants.includes(_id))
+  if (!chat.particepants.includes(_id)){
     throw new myError("You are not authorized to delete this chat", 401);
+  }
+
   chat.particepants.map(async (participant) => {
     const user = await User.findById(participant);
     const indexofCurrentChat = user.chats.indexOf(chat._id);
