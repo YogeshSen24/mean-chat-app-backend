@@ -8,6 +8,7 @@ import Request from "../models/request.model.js";
 const sendFriendRequest = asyncHandler(async (req, res) => {
   const { receiver } = req.body;
   const requester = req.user._id;
+  console.log(receiver , requester);
 
   // Check if receiver exists
   const isValidReceiver = await User.findById(receiver);

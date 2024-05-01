@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import Chat from "../models/chat.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import myError from "../utils/customErrors.js";
 import Response from "../utils/customResponses.js";
@@ -98,6 +99,32 @@ const getAllFriends = asyncHandler(async (req, res) => {
   });  if (!user) throw new myError("No friends found", 404);
   Response(res, user, 200, "Friends fetched successfully");
 });
+
+const removeFriend = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { friendId } = req.params;
+
+  // Find the chat between the current user and the friend
+  const chat = await Chat.findOneAndDelete({
+    particepants: { $all: [_id, friendId] } // Find chat with both users
+  });
+
+  if (!chat) {
+    throw new myError("Chat not found", 404);
+  }
+
+  // Remove the chat ID from the user's and friend's friends array
+  await User.findByIdAndUpdate(_id, {
+    $pull: { friends: chat._id }
+  });
+
+  await User.findByIdAndUpdate(friendId, {
+    $pull: { friends: chat._id }
+  });
+  // Send response
+  Response(res, chat, 200, "Friend removed successfully");
+});
+
 const searchUser = asyncHandler(async (req, res) => {
   const { data } = req.params;
   const {_id : currentUserId} = req.user
@@ -135,5 +162,6 @@ export {
   updateUser,
   getAllFriendRequests,
   getAllFriends,
-  searchUser
+  searchUser,
+  removeFriend
 };
