@@ -67,7 +67,19 @@ const getFullChatInfo = asyncHandler(async (req, res) => {
     throw new myError("Please provide chat to connect!!!", 501);
   }
 
-  let chat = await Chat.findById(chatId).select("particepants messages").populate("particepants messages");
+  let chat = await Chat.findById(chatId)
+  .select("participants messages")
+  .populate({
+    path: "participants",
+    select: "username profileImage"
+  })
+  .populate({
+    path: "messages",
+    populate: {
+      path: "sender",
+      select: "username profileImage"
+    }
+  });
 
   if (!chat) {
     throw new myError(
