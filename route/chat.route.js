@@ -6,7 +6,7 @@ import { addMembers, createChat, createGroup, deleteChat, deleteGroup, findChat,
 const router = express.Router();
 
 router.post("/create/group" , authenticateUser , createGroup )
-router.post("/create/:userId" , authenticateUser , createChat )
+router.get("/create/:userId" , authenticateUser , createChat )
 router.get("/find/:userId" , authenticateUser , findChat )
 router.put("/update/:id" , authenticateUser , multerUpload.single("groupIcon") , uploadToCloudinary , updateGroup )
 router.put("/transfer" , authenticateUser , transferGroupOwnership)
