@@ -40,7 +40,7 @@ const sendMessage = asyncHandler(async (req, res) => {
   chat.messages.push(newMessage);
   await chat.save();
 
-  chat.populate({
+  await chat.populate({
     path : "sender",
     select : "username profileImage "
   })
