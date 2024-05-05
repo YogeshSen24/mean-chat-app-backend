@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/create/group" , authenticateUser , createGroup )
 router.post("/create/:userId" , authenticateUser , createChat )
-router.post("/find/:userId" , authenticateUser , findChat )
+router.get("/find/:userId" , authenticateUser , findChat )
 router.put("/update/:id" , authenticateUser , multerUpload.single("groupIcon") , uploadToCloudinary , updateGroup )
 router.put("/transfer" , authenticateUser , transferGroupOwnership)
 router.put("/addMembers/:id" , authenticateUser , addMembers)
