@@ -70,7 +70,7 @@ const getFullChatInfo = asyncHandler(async (req, res) => {
   let chat = await Chat.findById(chatId)
   .select("participants messages")
   .populate({
-    path: "participants",
+    path: "particepants",
     select: "username profileImage"
   })
   .populate({
