@@ -60,6 +60,23 @@ const getConversation = asyncHandler(async (req, res) => {
   }
   Response(res, chat, 201, "Success!!!");
 });
+const getFullChatInfo = asyncHandler(async (req, res) => {
+  const currentUser = req.user._id;
+  const { chatId } = req.params;
+  if (!chatId) {
+    throw new myError("Please provide chat to connect!!!", 501);
+  }
+
+  let chat = await Chat.findById(chatId).select("particepants messages").populate("particepants messages");
+
+  if (!chat) {
+    throw new myError(
+      "Chat not found , please add the user in your friendlist to send message!!!",
+      501
+    );
+  }
+  Response(res, chat, 201, "Success!!!");
+});
 const findChat = asyncHandler(async (req, res) => {
   const currentUser = req.user._id;
   const { userId } = req.params;
@@ -261,5 +278,6 @@ export {
   removeMembers,
   deleteChat,
   deleteGroup,
-  getConversation
+  getConversation,
+  getFullChatInfo
 };
