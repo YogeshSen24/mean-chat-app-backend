@@ -38,6 +38,28 @@ const createChat = asyncHandler(async (req, res) => {
   user2.save();
   Response(res, chat, 201, "Chat Created Successfully!!!");
 });
+const getConversation = asyncHandler(async (req, res) => {
+  const currentUser = req.user._id;
+  const { userId } = req.params;
+  if (!userId) {
+    throw new myError("Please provide user to connect!!!", 501);
+  }
+
+  let chat = await Chat.findOne({
+    particepants: { $all: [currentUser, userId] },
+    type: "individual",
+  }).select("messages").populate("messages");
+
+  
+
+  if (!chat) {
+    throw new myError(
+      "No connection found , please add the user in your friendlist to send message!!!",
+      501
+    );
+  }
+  Response(res, chat, 201, "Success!!!");
+});
 const findChat = asyncHandler(async (req, res) => {
   const currentUser = req.user._id;
   const { userId } = req.params;
@@ -45,10 +67,12 @@ const findChat = asyncHandler(async (req, res) => {
     throw new myError("Please provide user to connect!!!", 501);
   }
 
-  const chat = await Chat.findOne({
+  let chat = await Chat.findOne({
     particepants: { $all: [currentUser, userId] },
     type: "individual",
   });
+
+  
 
   if (!chat) {
     throw new myError(
@@ -237,4 +261,5 @@ export {
   removeMembers,
   deleteChat,
   deleteGroup,
+  getConversation
 };
