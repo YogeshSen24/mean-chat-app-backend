@@ -1,6 +1,4 @@
-// multerMiddleware.js
-
-import  multer from 'multer';
+import multer from 'multer';
 
 // Configure Multer storage for file uploads
 const storage = multer.diskStorage({
@@ -12,13 +10,16 @@ const storage = multer.diskStorage({
     }
 });
 
-// File filter function to accept only certain file types
+// File filter function to accept multiple file types
 const fileFilter = (req, file, cb) => {
-    // Accept image files only
-    if (file.mimetype.startsWith('image/')) {
+    // Define allowed MIME types
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'video/mp4', 'audio/mpeg', 'application/pdf']; // Add more MIME types as needed
+
+    // Check if the uploaded file's MIME type is in the allowed list
+    if (allowedMimeTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
-        cb(new Error('Only image files are allowed'), false);
+        cb(new Error('Only images, videos, audios, and PDF files are allowed'), false);
     }
 };
 
@@ -27,9 +28,8 @@ const multerUpload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
-        fileSize: 1024 * 1024 * 5 // 5MB max file size
+        fileSize: 1024 * 1024 * 50 // 50MB max file size (adjust as needed)
     }
-})
+});
 
 export default multerUpload;
-
