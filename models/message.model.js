@@ -1,12 +1,10 @@
-// message.js
-
 import mongoose from 'mongoose';
 
 // Define message schema
 const messageSchema = new mongoose.Schema({
     sender: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'User', // Reference to the User model
         required: true
     },
     receiver: {
