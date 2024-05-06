@@ -16,8 +16,7 @@ const messageSchema = new mongoose.Schema({
         ref: 'Group' // Reference to the group where the message is sent (for group chats)
     },
     content: {
-        type: String,
-        required: true
+        type: String
     },
     attachments: [{
         type: String // Array of attachment URLs (stored in Cloudinary)

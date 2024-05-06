@@ -24,6 +24,10 @@ const sendMessage = asyncHandler(async (req, res) => {
     throw new myError("Chat not found!!!", 404);
   }
 
+  if(!content && attachments.length===0) {
+    throw new myError("Message can't be empty", 400);
+  }
+
   // Check if the sender is a participant in the chat
   if (!chat.particepants.includes(sender)) {
     throw new myError("You are not a participant in this chat", 403);
@@ -32,7 +36,7 @@ const sendMessage = asyncHandler(async (req, res) => {
   // Create the message
   const newMessage = await Message.create({
     sender,
-    content,
+    content : content || "",
     attachments,
   });
 
