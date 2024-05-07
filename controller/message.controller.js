@@ -96,7 +96,7 @@ const deleteMessage = asyncHandler(async (req, res) => {
   }
   // Find the message
   const message = await Message.findById(messageId);
-  if (message.sender !== sender) {
+  if (message.sender.toString() !== sender.toString()) {
     throw new myError("Only sender can delete the attachments", 501);
   }
 
