@@ -22,7 +22,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://owl-chat.netlify.app",
+    origin: ["https://owl-chat.netlify.app" , "http://localhost:5173"],
     methods: ["GET", "POST" , "PUT" , "DELETE"]
   },
 });
