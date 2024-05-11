@@ -4,6 +4,8 @@ import Message from "../models/message.model.js";
 import myError from "../utils/customErrors.js";
 import Response from "../utils/customResponses.js";
 import mongoose from "mongoose";
+import { io } from "../server.js";
+import {userSockets} from "../server.js"
 
 const sendMessage = asyncHandler(async (req, res) => {
   const chatId = req.params.chatId;
@@ -53,6 +55,14 @@ const sendMessage = asyncHandler(async (req, res) => {
 
   // Send success response
   Response(res, newMessage, 201, "Message sent successfully");
+  //find the receiver socket and emmit the message to the receiver socket
+  const receiver = chat.particepants.find((p) => p._id.toString() !== sender.toString());
+  const receiverId = receiver._id.toString(); // Extract receiver's ID
+  const receiverSocket = userSockets.get(receiverId);
+  if (receiverSocket) {
+    io.to(receiverSocket).emit("direct-message", newMessage);
+  }
+  
 });
 const updateMessage = asyncHandler(async (req, res) => {
   const messageId = req.params.messageId;

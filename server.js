@@ -21,7 +21,7 @@ import { log } from "console";
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
+export const io = new Server(httpServer, {
   cors: {
     origin: ["https://owl-chat.netlify.app" , "http://localhost:5173"],
     methods: ["GET", "POST" , "PUT" , "DELETE"]
@@ -63,7 +63,7 @@ const port = process.env.PORT || 8000;
 
 
 //using map to store active user id and socket id
-const userSockets = new Map();
+export const userSockets = new Map();
 
 io.on('connection', (socket) => {
   console.log('a user connected: ' + socket.id);
