@@ -5,6 +5,9 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors"
 
+import { createServer } from "http";
+import { Server } from "socket.io";
+
 
 import authRoute from "./route/auth.route.js"
 import userRoute from "./route/user.route.js"
@@ -16,6 +19,13 @@ import requestRoute from "./route/request.route.js"
 
 
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "https://owl-chat.netlify.app",
+    methods: ["GET", "POST" , "PUT" , "DELETE"]
+  },
+});
 dotenv.config();
 
 // parse application/x-www-form-urlencoded
@@ -49,8 +59,19 @@ app.use("/api/v1/request" , requestRoute)
 
 //starting server
 const port = process.env.PORT || 8000;
-app.listen(port, () => {
-  console.log(`Server is running on the port : ${port}`);
+io.on('connection', (socket) => {
+  console.log('a user connected'+ socket.id);
+
+
+
+
+  socket.on('dissconnect' , ()=>{
+    console.log('user disconnected');
+  })
+});
+
+httpServer.listen(port, () => {
+  console.log('server running at ' + port);
 });
 
 //connecting database
