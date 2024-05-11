@@ -61,6 +61,7 @@ const sendMessage = asyncHandler(async (req, res) => {
   const receiverSocket = userSockets.get(receiverId);
   if (receiverSocket) {
     io.to(receiverSocket).emit("direct-message", newMessage);
+    console.log(`message sent to ${receiverSocket} : ${receiverId} `);
   }
   
 });
