@@ -52,9 +52,6 @@ const sendMessage = asyncHandler(async (req, res) => {
     options: { strictPopulate: false } 
   })
 
-
-  // Send success response
-  Response(res, newMessage, 201, "Message sent successfully");
   //find the receiver socket and emmit the message to the receiver socket
   const receiver = chat.particepants.find((p) => p._id.toString() !== sender.toString());
   const receiverId = receiver._id.toString(); // Extract receiver's ID
@@ -63,6 +60,11 @@ const sendMessage = asyncHandler(async (req, res) => {
     io.to(receiverSocket).emit("direct-message", newMessage);
     console.log(`message sent to ${receiverSocket} : ${receiverId} `);
   }
+
+
+  // Send success response
+  Response(res, newMessage, 201, "Message sent successfully");
+  
   
 });
 const updateMessage = asyncHandler(async (req, res) => {
