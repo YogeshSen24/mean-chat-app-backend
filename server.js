@@ -14,6 +14,7 @@ import userRoute from "./route/user.route.js"
 import messageRoute from "./route/message.route.js"
 import chatRoute from "./route/chat.route.js"
 import requestRoute from "./route/request.route.js"
+import { log } from "console";
 
 
 
@@ -59,16 +60,45 @@ app.use("/api/v1/request" , requestRoute)
 
 //starting server
 const port = process.env.PORT || 8000;
+
+
+//using map to store active user id and socket id
+const userSockets = new Map();
+
 io.on('connection', (socket) => {
-  console.log('a user connected'+ socket.id);
+  console.log('a user connected: ' + socket.id);
 
+  // Extract user ID from the query parameters sent by the client
+  const userId = socket.handshake.query.userId;
 
+  if (userId) {
+    // Store the socket with the user ID
+    userSockets.set(userId, socket);
+    // Log the user ID and socket ID
+    console.log(`User ${userId} connected with socket ID ${socket.id}`);
+    console.log(userSockets);
+  } else {
+    // If no user ID is provided, log an error
+    console.log('User connected without providing a user ID');
+  }
 
+  // When a user disconnects
+  socket.on('disconnect', () => {
+    // Find the user ID associated with the socket
+    const userId = Array.from(userSockets.entries())
+      .find(([key, value]) => value === socket)?.[0];
 
-  socket.on('dissconnect' , ()=>{
-    console.log('user disconnected');
-  })
+    if (userId) {
+      // Remove the user socket entry from the Map
+      userSockets.delete(userId);
+      // Log the disconnection
+      console.log(`User ${userId} disconnected`);
+    } else {
+      console.log('Unknown user disconnected');
+    }
+  });
 });
+
 
 httpServer.listen(port, () => {
   console.log('server running at ' + port);
