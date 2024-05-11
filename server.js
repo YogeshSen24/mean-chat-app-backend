@@ -76,7 +76,8 @@ io.on('connection', (socket) => {
     userSockets.set(userId, socket);
     // Log the user ID and socket ID
     console.log(`User ${userId} connected with socket ID ${socket.id}`);
-    console.log(userSockets);
+    const activeUsers = Array.from(userSockets.keys());
+    io.emit('active-users', activeUsers);
   } else {
     // If no user ID is provided, log an error
     console.log('User connected without providing a user ID');
@@ -86,13 +87,17 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     // Find the user ID associated with the socket
     const userId = Array.from(userSockets.entries())
-      .find(([key, value]) => value === socket)?.[0];
+    .find(([key, value]) => value === socket)?.[0];
 
-    if (userId) {
-      // Remove the user socket entry from the Map
-      userSockets.delete(userId);
-      // Log the disconnection
-      console.log(`User ${userId} disconnected`);
+  if (userId) {
+    // Remove the user socket entry from the Map
+    userSockets.delete(userId);
+    // Log the disconnection
+    console.log(`User ${userId} disconnected`);
+
+    // Broadcast updated active user IDs to all clients
+    const activeUsers = Array.from(userSockets.keys());
+    io.emit('active-users', activeUsers);
     } else {
       console.log('Unknown user disconnected');
     }
