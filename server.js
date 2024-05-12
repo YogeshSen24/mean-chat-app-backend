@@ -63,7 +63,7 @@ const port = process.env.PORT || 8000;
 
 
 //using map to store active user id and socket id
-export const userSockets = new Map();
+export let userSockets = new Map();
 
 io.on('connection', (socket) => {
   console.log('a user connected: ' + socket.id);
@@ -82,6 +82,10 @@ io.on('connection', (socket) => {
     // If no user ID is provided, log an error
     console.log('User connected without providing a user ID');
   }
+
+  socket.on("direct-message" , (message)=>{
+    console.log(message);
+  })
 
   // When a user disconnects
   socket.on('disconnect', () => {

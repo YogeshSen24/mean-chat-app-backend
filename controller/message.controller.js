@@ -4,9 +4,6 @@ import Message from "../models/message.model.js";
 import myError from "../utils/customErrors.js";
 import Response from "../utils/customResponses.js";
 import mongoose from "mongoose";
-import { io } from "../server.js";
-import {userSockets} from "../server.js"
-
 const sendMessage = asyncHandler(async (req, res) => {
   const chatId = req.params.chatId;
   const { content } = req.body;
@@ -44,7 +41,7 @@ const sendMessage = asyncHandler(async (req, res) => {
 
   // Add the message to the chat
   chat.messages.push(newMessage);
-  // await chat.save();
+  await chat.save();
 
   await chat.populate({
     path : "sender",
@@ -52,20 +49,10 @@ const sendMessage = asyncHandler(async (req, res) => {
     options: { strictPopulate: false } 
   })
 
-  //find the receiver socket and emmit the message to the receiver socket
-  const receiver = chat.particepants.find((p) => p._id.toString() === sender.toString());
-  const receiverId = receiver._id.toString(); // Extract receiver's ID
-  console.log(userSockets);
-  const receiverSocket = userSockets.get(receiverId);
-  console.log(receiverSocket);
-  if (receiverSocket) {
-    io.to(receiverSocket).emit("direct-message", newMessage);
-    console.log(`message sent to ${receiverSocket} : ${receiverId} `);
-  }
 
 
   // Send success response
-  // Response(res, newMessage, 201, "Message sent successfully");
+  Response(res, newMessage, 201, "Message sent successfully");
   
   
 });
