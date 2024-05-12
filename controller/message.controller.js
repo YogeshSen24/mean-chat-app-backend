@@ -44,7 +44,7 @@ const sendMessage = asyncHandler(async (req, res) => {
 
   // Add the message to the chat
   chat.messages.push(newMessage);
-  await chat.save();
+  // await chat.save();
 
   await chat.populate({
     path : "sender",
@@ -53,10 +53,11 @@ const sendMessage = asyncHandler(async (req, res) => {
   })
 
   //find the receiver socket and emmit the message to the receiver socket
-  const receiver = chat.particepants.find((p) => p._id.toString() !== sender.toString());
+  const receiver = chat.particepants.find((p) => p._id.toString() === sender.toString());
   const receiverId = receiver._id.toString(); // Extract receiver's ID
-  console.log(receiverId);
+  console.log(userSockets);
   const receiverSocket = userSockets.get(receiverId);
+  console.log(receiverSocket);
   if (receiverSocket) {
     io.to(receiverSocket).emit("direct-message", newMessage);
     console.log(`message sent to ${receiverSocket} : ${receiverId} `);
@@ -64,7 +65,7 @@ const sendMessage = asyncHandler(async (req, res) => {
 
 
   // Send success response
-  Response(res, newMessage, 201, "Message sent successfully");
+  // Response(res, newMessage, 201, "Message sent successfully");
   
   
 });
