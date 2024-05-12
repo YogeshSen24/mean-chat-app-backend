@@ -44,7 +44,7 @@ const sendMessage = asyncHandler(async (req, res) => {
 
   // Add the message to the chat
   chat.messages.push(newMessage);
-  // await chat.save();
+  await chat.save();
 
   await chat.populate({
     path : "sender",
@@ -64,7 +64,7 @@ const sendMessage = asyncHandler(async (req, res) => {
 
 
   // Send success response
-  // Response(res, newMessage, 201, "Message sent successfully");
+  Response(res, newMessage, 201, "Message sent successfully");
   
   
 });
