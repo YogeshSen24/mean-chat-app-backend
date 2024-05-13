@@ -93,6 +93,7 @@ io.on("connection", (socket) => {
 
   socket.on("direct-message", (message) => {
     // Find the socket ID of the receiver
+    console.log(message);
     console.log("receivers id :" , message.receiver._id );
     const receiverSocketId = findReceiverSocketId(message.receiver._id);
     console.log("receiver slocket id : " , receiverSocketId);
