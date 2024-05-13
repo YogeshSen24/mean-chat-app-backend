@@ -44,7 +44,7 @@ const sendMessage = asyncHandler(async (req, res) => {
   await chat.save();
   let receiver = null
   if(chat.type==="individual"){
-   receiver = chat.particepants.map((p)=>p.toString()!==sender)
+   receiver = chat.particepants.filter((p)=>p.toString()!==sender)
   }
 const message = await Message.findById(newMessage._id).populate({
   path : "sender",
