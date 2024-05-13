@@ -41,18 +41,21 @@ const sendMessage = asyncHandler(async (req, res) => {
 
   // Add the message to the chat
   chat.messages.push(newMessage);
-  await chat.save();
+  // await chat.save();
 
   await chat.populate({
     path : "sender",
     select : "username profileImage ",
     options: { strictPopulate: false } 
   })
-
-
+const message = await Message.findById(newMessage._id).populate({
+  path : "sender",
+  select : "username profileImage ",
+  options: { strictPopulate: false } 
+})
 
   // Send success response
-  Response(res, newMessage, 201, "Message sent successfully");
+  Response(res, message, 201, "Message sent successfully");
   
   
 });

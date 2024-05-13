@@ -84,6 +84,7 @@ io.on('connection', (socket) => {
   }
 
   socket.on("direct-message" , (message)=>{
+    
     io.emit("direct-message" , message)
     console.log(message);
   })
