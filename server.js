@@ -63,13 +63,14 @@ const port = process.env.PORT || 8000;
 export let userSockets = new Map();
 
 const findReceiverSocketId = (receiverId) => {
-  let receiverSocketId = null;
-  userSockets.forEach((value, key) => {
-    if (value.userId === receiverId) {
-      receiverSocketId = value.socketId;
-    }
-  });
-  return receiverSocketId;
+   // Check if the user ID exists in the userSockets Map
+   if (userSockets.has(receiverId)) {
+    // If it exists, return the corresponding socket ID
+    return userSockets.get(receiverId).id;
+  } else {
+    // If the user ID does not exist, return null or handle the case accordingly
+    return null;
+  }
 };
 
 io.on("connection", (socket) => {
@@ -92,7 +93,9 @@ io.on("connection", (socket) => {
 
   socket.on("direct-message", (message) => {
     // Find the socket ID of the receiver
+    console.log("receivers id :" , message.receiver._id );
     const receiverSocketId = findReceiverSocketId(message.receiver._id);
+    console.log("receiver slocket id : " , receiverSocketId);
     socket.to(receiverSocketId).emit("direct-message", message);
     // io.emit("direct-message", message);
     console.log(receiverSocketId , message);
