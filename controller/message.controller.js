@@ -56,7 +56,7 @@ const message = await Message.findById(newMessage._id).populate({
   Response(res, {...message , receiver }, 201, "Message sent successfully");
   
   
-});
+}); //done 
 const updateMessage = asyncHandler(async (req, res) => {
   const messageId = req.params.messageId;
   const { content } = req.body;
@@ -87,7 +87,7 @@ const updateMessage = asyncHandler(async (req, res) => {
 
   // Send success response
   Response(res, message, 200, "Message updated successfully");
-});
+});//done 
 
 const deleteMessage = asyncHandler(async (req, res) => {
   const messageId = req.params.messageId;
@@ -113,6 +113,6 @@ const deleteMessage = asyncHandler(async (req, res) => {
 
   // Send success response
   Response(res, deletedMessage, 200, "Message deleted successfully");
-});
+});//done
 
 export { sendMessage, updateMessage , deleteMessage };
