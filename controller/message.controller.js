@@ -75,7 +75,7 @@ const updateMessage = asyncHandler(async (req, res) => {
   if (!message) {
     throw new myError("Message not found!!!", 404);
   }
-  if (message.sender !== sender) {
+  if (message.sender.toString() !== sender.toString()) {
     throw new myError("Only sender can update the message", 501);
   }
   // Update the message
