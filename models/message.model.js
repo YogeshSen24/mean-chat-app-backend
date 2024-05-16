@@ -9,7 +9,7 @@ const messageSchema = new mongoose.Schema({
     },
     receiver: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User' // Reference to the user who is the intended receiver (for individual chats)
+        ref: 'Chat' // Reference to the chat who is the intended receiver (for individual chats)
     },
     receiverGroup: {
         type: mongoose.Schema.Types.ObjectId,

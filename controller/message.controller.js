@@ -35,6 +35,7 @@ const sendMessage = asyncHandler(async (req, res) => {
   // Create the message
   const newMessage = await Message.create({
     sender,
+    receiver : chat._id,
     content : content || "",
     attachments,
   });
@@ -85,9 +86,12 @@ const updateMessage = asyncHandler(async (req, res) => {
   );
   await message.save();
 
+  const updatedMessage = await Chat.findById(message.receiver).populate('particepants', '_id');
+  //find the chat in wichich the message is in and select its particepants only 
+
   // Send success response
-  Response(res, message, 200, "Message updated successfully");
-});//done 
+  Response(res, updatedMessage, 200, "Message updated successfully");
+});
 
 const deleteMessage = asyncHandler(async (req, res) => {
   const messageId = req.params.messageId;

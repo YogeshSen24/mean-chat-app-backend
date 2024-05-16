@@ -101,6 +101,13 @@ io.on("connection", (socket) => {
     // io.emit("direct-message", message);
     console.log(receiverSocketId , message);
   });
+  socket.on("edit-direct-message" , (message)=>{
+    console.log(message);
+    console.log("receivers id :" , message.receiver._id);
+    const receiverSocketId = findReceiverSocketId(message.receiver[0]);
+    console.log("receiver slocket id : " , receiverSocketId);
+    socket.to(receiverSocketId).emit("edit-direct-message", message);
+  })
 
   // When a user disconnects
   socket.on("disconnect", () => {
