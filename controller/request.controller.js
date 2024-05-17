@@ -50,7 +50,7 @@ if (areAlreadyFriends) {
 
     const result = Chat.findById(newChat._id).populate({
       path : "particepants",
-      select : "name profilePicture"
+      select : "username profilePicture"
     })
     Response(res, result , 201, "Friend added successfully");
   } else {
