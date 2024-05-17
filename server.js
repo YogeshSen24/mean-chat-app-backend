@@ -110,10 +110,10 @@ io.on("connection", (socket) => {
   })
 
   socket.on("add-friend" , (message)=>{
-    console.log(message);
+    console.log("add friend" , message);
   })
   socket.on("remove-friend" , (message)=>{
-    console.log(message);
+    console.log("remove friend " , message);
   })
 
   // When a user disconnects
