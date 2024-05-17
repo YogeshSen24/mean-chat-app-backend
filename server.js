@@ -109,6 +109,10 @@ io.on("connection", (socket) => {
     socket.to(receiverSocketId).emit("edit-direct-message", message);
   })
 
+  socket.on("friend-request" , (message)=>{
+    console.log(message);
+  })
+
   socket.on("add-friend" , (message)=>{
     console.log("add friend" , message);
     const receiverSocketId = message.particepants.map(user=>(
@@ -128,6 +132,7 @@ io.on("connection", (socket) => {
         socket.to(user).emit("remove-friend", message)
         ))
   })
+
 
   // When a user disconnects
   socket.on("disconnect", () => {
