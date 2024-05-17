@@ -91,6 +91,7 @@ const acceptFriendRequest = asyncHandler(async (req, res) => {
 
   // Get the friend request ID from req.body
   const { requestId } = req.body;
+
   // Find the friend request by ID
   const friendRequest = await Request.findById(requestId);
 
@@ -98,8 +99,10 @@ const acceptFriendRequest = asyncHandler(async (req, res) => {
   if (!friendRequest) {
     throw new myError("Friend request not found", 404);
   }
+  
+  // Ensure the current user is the receiver of the friend request
   if (friendRequest.receiver.toString() !== currentUserID.toString()) {
-    throw new myError("You cant accept the request", 501);
+    throw new myError("You can't accept this request", 501);
   }
 
   // Create a chat between the requester and the receiver
@@ -132,9 +135,16 @@ const acceptFriendRequest = asyncHandler(async (req, res) => {
   // Delete the friend request
   await Request.findByIdAndDelete(friendRequest._id);
 
+  // Populate the new chat with participant details
+  const populatedChat = await Chat.findById(newChat._id).populate({
+    path: "particepants",
+    select: "username profilePicture",
+  });
+
   // Send success response
-  Response(res, newChat, 200, "Friend request accepted successfully");
+  Response(res, populatedChat, 200, "Friend request accepted successfully");
 });
+
 
 const rejectFriendRequest = asyncHandler(async (req, res) => {
   // Get the current user's ID from req.user._id
