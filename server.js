@@ -63,8 +63,8 @@ const port = process.env.PORT || 8000;
 export let userSockets = new Map();
 
 const findReceiverSocketId = (receiverId) => {
-   // Check if the user ID exists in the userSockets Map
-   if (userSockets.has(receiverId)) {
+  // Check if the user ID exists in the userSockets Map
+  if (userSockets.has(receiverId)) {
     // If it exists, return the corresponding socket ID
     return userSockets.get(receiverId).id;
   } else {
@@ -94,46 +94,45 @@ io.on("connection", (socket) => {
   socket.on("direct-message", (message) => {
     // Find the socket ID of the receiver
     console.log(message);
-    console.log("receivers id :" , message.receiver[0]);
+    console.log("receivers id :", message.receiver[0]);
     const receiverSocketId = findReceiverSocketId(message.receiver[0]);
-    console.log("receiver slocket id : " , receiverSocketId);
+    console.log("receiver slocket id : ", receiverSocketId);
     socket.to(receiverSocketId).emit("direct-message", message);
     // io.emit("direct-message", message);
-    console.log(receiverSocketId , message);
+    console.log(receiverSocketId, message);
   });
-  socket.on("edit-direct-message" , (message)=>{
+  socket.on("edit-direct-message", (message) => {
     console.log(message);
-    console.log("receivers id :" , message.receiver._id);
+    console.log("receivers id :", message.receiver._id);
     const receiverSocketId = findReceiverSocketId(message.receiver[0]);
-    console.log("receiver slocket id : " , receiverSocketId);
+    console.log("receiver slocket id : ", receiverSocketId);
     socket.to(receiverSocketId).emit("edit-direct-message", message);
-  })
+  });
 
-  socket.on("friend-request" , (message)=>{
+  socket.on("friend-request", (message) => {
     console.log(message);
-  })
+  });
 
-  socket.on("add-friend" , (message)=>{
-    console.log("add friend" , message);
-    const receiverSocketId = message.particepants.map(user=>(
+  socket.on("add-friend", (message) => {
+    console.log("add friend", message);
+    const receiverSocketId = message.particepants.map((user) =>
       findReceiverSocketId(user)
-    ))
-    console.log(receiverSocketId);
+    );
 
-    receiverSocketId.map(user=>(
-      socket.to(user).emit("add-friend", message)
-    ))
-  })
-  socket.on("remove-friend" , (message)=>{
-    console.log("remove friend " , message);
-    const receiverSocketId = message.particepants.map(user=>(
+    receiverSocketId.map((user) => {
+      socket.to(user).emit("add-friend", message);
+      console.log(user , "emmited ");
+    });
+  });
+  socket.on("remove-friend", (message) => {
+    console.log("remove friend ", message);
+    const receiverSocketId = message.particepants.map((user) =>
       findReceiverSocketId(user)
-      ))
-      receiverSocketId.map(user=>(
-        socket.to(user).emit("remove-friend", message)
-        ))
-  })
-
+    );
+    receiverSocketId.map((user) =>
+      socket.to(user).emit("remove-friend", message)
+    );
+  });
 
   // When a user disconnects
   socket.on("disconnect", () => {
