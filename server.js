@@ -115,23 +115,28 @@ io.on("connection", (socket) => {
 
   socket.on("add-friend", (message) => {
     console.log("add friend", message);
-    const receiverSocketId = message.particepants.map((user) =>
-      findReceiverSocketId(user)
-    );
-
-    receiverSocketId.map((user) => {
-      socket.to(user).emit("friend-added", message);
-      console.log(user , "emmited ");
+    const receiverSocketIds = message.particepants.map((user) => findReceiverSocketId(user));
+    receiverSocketIds.forEach((socketId) => {
+      if (socketId) {
+        socket.to(socketId).emit("friend-added", message);
+        console.log(`Friend added message sent to ${socketId}`);
+      } else {
+        console.log("Receiver socket ID not found for user in add friend:", user);
+      }
     });
   });
+
   socket.on("remove-friend", (message) => {
     console.log("remove friend ", message);
-    const receiverSocketId = message.particepants.map((user) =>
-      findReceiverSocketId(user)
-    );
-    receiverSocketId.map((user) =>
-      socket.to(user).emit("friend-removed", message)
-    );
+    const receiverSocketIds = message.particepants.map((user) => findReceiverSocketId(user));
+    receiverSocketIds.forEach((socketId) => {
+      if (socketId) {
+        socket.to(socketId).emit("friend-removed", message);
+        console.log(`Friend removed message sent to ${socketId}`);
+      } else {
+        console.log("Receiver socket ID not found for user in remove friend:", user);
+      }
+    });
   });
 
   // When a user disconnects
