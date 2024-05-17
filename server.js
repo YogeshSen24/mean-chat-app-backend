@@ -118,6 +118,7 @@ io.on("connection", (socket) => {
     const receiverSocketId = message.particepants.map(user=>(
       findReceiverSocketId(user)
     ))
+    console.log(receiverSocketId);
 
     receiverSocketId.map(user=>(
       socket.to(user).emit("add-friend", message)
