@@ -111,9 +111,22 @@ io.on("connection", (socket) => {
 
   socket.on("add-friend" , (message)=>{
     console.log("add friend" , message);
+    const receiverSocketId = message.particepants.map(user=>(
+      findReceiverSocketId(user)
+    ))
+
+    receiverSocketId.map(user=>(
+      socket.to(user).emit("add-friend", message)
+    ))
   })
   socket.on("remove-friend" , (message)=>{
     console.log("remove friend " , message);
+    const receiverSocketId = message.particepants.map(user=>(
+      findReceiverSocketId(user)
+      ))
+      receiverSocketId.map(user=>(
+        socket.to(user).emit("remove-friend", message)
+        ))
   })
 
   // When a user disconnects
