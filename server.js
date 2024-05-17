@@ -119,7 +119,7 @@ io.on("connection", (socket) => {
         socket.to(socketId).emit("friend-added", message);
         console.log(`Friend added message sent to ${socketId}`);
       } else {
-        console.log("Receiver socket ID not found for user in add friend:", user);
+        console.log("Receiver socket ID not found");
       }
     });
   });
@@ -132,7 +132,7 @@ io.on("connection", (socket) => {
         socket.to(socketId).emit("friend-removed", message);
         console.log(`Friend removed message sent to ${socketId}`);
       } else {
-        console.log("Receiver socket ID not found for user in remove friend:", user);
+        console.log("Receiver socket ID not found ");
       }
     });
   });
