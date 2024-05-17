@@ -8,7 +8,8 @@ import Request from "../models/request.model.js";
 const sendFriendRequest = asyncHandler(async (req, res) => {
   const { receiver } = req.body;
   const requester = req.user._id;
-  console.log(receiver , requester);
+  
+  console.log(`Receiver: ${receiver.toString()}, Requester: ${requester.toString()}`);
 
   // Check if receiver exists
   const isValidReceiver = await User.findById(receiver);
@@ -16,14 +17,14 @@ const sendFriendRequest = asyncHandler(async (req, res) => {
     throw new myError("Invalid Receiver", 404);
   }
   if (receiver.toString() === requester.toString()) {
-    throw new myError("You cant send request to yourself", 501);
+    throw new myError("You can't send a request to yourself", 501);
   }
 
   // Check if requester and receiver are already friends
   const areAlreadyFriends = isValidReceiver.friends.some(chat => chat.particepants.includes(requester));
-if (areAlreadyFriends) {
-  throw new myError("User is already connected!!!", 501);
-}
+  if (areAlreadyFriends) {
+    throw new myError("User is already connected!!!", 501);
+  }
 
   if (isValidReceiver.status === "public") {
     // Create a chat between the requester and the receiver
@@ -48,11 +49,12 @@ if (areAlreadyFriends) {
       { new: true }
     );
 
-    const result = Chat.findById(newChat._id).populate({
-      path : "particepants",
-      select : "username profilePicture"
-    })
-    Response(res, result , 201, "Friend added successfully");
+    const result = await Chat.findById(newChat._id).populate({
+      path: "particepants",
+      select: "username profilePicture"
+    });
+
+    Response(res, result, 201, "Friend added successfully");
   } else {
     // Check if a friend request already exists
     const existingFriendRequest = await Request.findOne({
@@ -81,6 +83,7 @@ if (areAlreadyFriends) {
     Response(res, friendRequest, 201, "Friend request sent successfully");
   }
 });
+
 
 const acceptFriendRequest = asyncHandler(async (req, res) => {
   // Get the current user's ID from req.user._id
