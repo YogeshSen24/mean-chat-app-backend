@@ -13,14 +13,12 @@ import userRoute from "./route/user.route.js";
 import messageRoute from "./route/message.route.js";
 import chatRoute from "./route/chat.route.js";
 import requestRoute from "./route/request.route.js";
-import { log } from "console";
 
 const app = express();
 const httpServer = createServer(app);
 export const io = new Server(httpServer, {
   cors: {
-    origin: ["https://owl-chat.netlify.app", "http://localhost:5173"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: ["https://owl-chat.netlify.app", "http://localhost:5173"]
   },
 });
 dotenv.config();
