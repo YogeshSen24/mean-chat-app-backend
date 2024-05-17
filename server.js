@@ -120,7 +120,7 @@ io.on("connection", (socket) => {
     );
 
     receiverSocketId.map((user) => {
-      socket.to(user).emit("add-friend", message);
+      socket.to(user).emit("friend-added", message);
       console.log(user , "emmited ");
     });
   });
@@ -130,7 +130,7 @@ io.on("connection", (socket) => {
       findReceiverSocketId(user)
     );
     receiverSocketId.map((user) =>
-      socket.to(user).emit("remove-friend", message)
+      socket.to(user).emit("friend-removed", message)
     );
   });
 
