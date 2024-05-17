@@ -47,7 +47,12 @@ if (areAlreadyFriends) {
       { $addToSet: { friends: newChat._id } },
       { new: true }
     );
-    Response(res, newChat, 201, "Friend added successfully");
+
+    const result = Chat.findById(newChat._id).populate({
+      path : "particepants",
+      select : "name profilePicture"
+    })
+    Response(res, result , 201, "Friend added successfully");
   } else {
     // Check if a friend request already exists
     const existingFriendRequest = await Request.findOne({
