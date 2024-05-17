@@ -109,6 +109,13 @@ io.on("connection", (socket) => {
     socket.to(receiverSocketId).emit("edit-direct-message", message);
   })
 
+  socket.on("add-friend" , (message)=>{
+    console.log(message);
+  })
+  socket.on("remove-friend" , (message)=>{
+    console.log(message);
+  })
+
   // When a user disconnects
   socket.on("disconnect", () => {
     // Find the user ID associated with the socket
