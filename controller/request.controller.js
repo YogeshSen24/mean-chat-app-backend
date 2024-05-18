@@ -21,7 +21,7 @@ const sendFriendRequest = asyncHandler(async (req, res) => {
   }
 
   // Check if requester and receiver are already friends
-  const areAlreadyFriends = isValidReceiver.friends.some(chat => chat.particepants.includes(requester));
+  const areAlreadyFriends = isValidReceiver.friends.some(chat => chat?.particepants?.includes(requester));
   if (areAlreadyFriends) {
     throw new myError("User is already connected!!!", 501);
   }
